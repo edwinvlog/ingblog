@@ -1,0 +1,280 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>NoClassDefFoundError和ClassNotFoundException | ING-BLOG</title><meta name="author" content="edwin"><meta name="copyright" content="edwin"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1、前言在写Java程序的时候，当一个类找不到的时候，JVM有时候会抛出 ClassNotFoundException 异常，而有时候又会抛出 NoClassDefFoundError。看两个异常的字面意思，好像都是类找不到，但是JVM为什么要用两个异常去区分类找不到的情况呢？这个两个异常有什么不同的地方呢？ 2、ClassNotFoundExceptionClassNotFoundExcepti">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NoClassDefFoundError和ClassNotFoundException">
+<meta property="og:url" content="http://ingblog.cn/posts/19486/index.html">
+<meta property="og:site_name" content="ING-BLOG">
+<meta property="og:description" content="1、前言在写Java程序的时候，当一个类找不到的时候，JVM有时候会抛出 ClassNotFoundException 异常，而有时候又会抛出 NoClassDefFoundError。看两个异常的字面意思，好像都是类找不到，但是JVM为什么要用两个异常去区分类找不到的情况呢？这个两个异常有什么不同的地方呢？ 2、ClassNotFoundExceptionClassNotFoundExcepti">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/008i3skNly1gyk26mvgc1j31hz0u0n4z.jpg">
+<meta property="article:published_time" content="2020-01-15T09:40:00.000Z">
+<meta property="article:modified_time" content="2025-02-05T14:22:28.434Z">
+<meta property="article:author" content="edwin">
+<meta property="article:tag" content="java基础">
+<meta property="article:tag" content="java异常">
+<meta property="article:tag" content="ClassNotFoundException">
+<meta property="article:tag" content="NoClassDefFoundError">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/008i3skNly1gyk26mvgc1j31hz0u0n4z.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "NoClassDefFoundError和ClassNotFoundException",
+  "url": "http://ingblog.cn/posts/19486/",
+  "image": "https://tva1.sinaimg.cn/large/008i3skNly1gyk26mvgc1j31hz0u0n4z.jpg",
+  "datePublished": "2020-01-15T09:40:00.000Z",
+  "dateModified": "2025-02-05T14:22:28.434Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "edwin",
+      "url": "http://ingblog.cn/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://ingblog.cn/posts/19486/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: '',
+  enable_page_level_ads: 'true'
+});</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'NoClassDefFoundError和ClassNotFoundException',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">43</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">37</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/TAGS/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://tva1.sinaimg.cn/large/008i3skNly1gyk26mvgc1j31hz0u0n4z.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">ING-BLOG</span></a><a class="nav-page-title" href="/"><span class="site-name">NoClassDefFoundError和ClassNotFoundException</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/TAGS/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">NoClassDefFoundError和ClassNotFoundException</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2020-01-15T09:40:00.000Z" title="发表于 2020-01-15 17:40:00">2020-01-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/java%E5%BC%82%E5%B8%B8/">java异常</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/java%E5%BC%82%E5%B8%B8/java%E5%9F%BA%E7%A1%80/">java基础</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="1、前言"><a href="#1、前言" class="headerlink" title="1、前言"></a>1、前言</h2><p>在写Java程序的时候，当一个类找不到的时候，JVM有时候会抛出 <strong>ClassNotFoundException</strong> 异常，而有时候又会抛出 <strong>NoClassDefFoundError</strong>。看两个异常的字面意思，好像都是类找不到，但是JVM为什么要用两个异常去区分类找不到的情况呢？这个两个异常有什么不同的地方呢？</p>
+<h2 id="2、ClassNotFoundException"><a href="#2、ClassNotFoundException" class="headerlink" title="2、ClassNotFoundException"></a>2、ClassNotFoundException</h2><p><strong>ClassNotFoundException</strong> 是一个运行时异常。从类继承层次上来看，<strong>ClassNotFoundException</strong> 是从 <strong>Exception</strong> 继承的，所以 <strong>ClassNotFoundException</strong> 是一个检查异常。</p>
+<p>当应用程序运行的过程中尝试使用类加载器去加载Class文件的时候，如果没有在 <strong>classpath</strong> 中查找到指定的类，就会抛出 <strong>ClassNotFoundException</strong> 。一般情况下，当我们使用<code>Class.forName()</code>或<code>ClassLoader.loadClass()</code>或<code>ClassLoader.findSystemClass()</code>在运行时加载类的时候，如果类没有被找到，那么就会导致JVM抛出 <strong>ClassNotFoundException</strong>。</p>
+<p>最简单的，当我们使用JDBC去连接数据库的时候，我们一般会使用<code>Class.forName()</code>的方式去加载JDBC的驱动，如果我们没有将驱动放到应用的 <strong>classpath</strong> 下，那么会导致运行时找不到类，所以运行<code>Class.forName()</code>会抛出 <strong>ClassNotFoundException</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainClass</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Class.forName(<span class="string">&quot;oracle.jdbc.driver.OracleDriver&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ java MainClass</span><br><span class="line">java.lang.ClassNotFoundException: oracle.jdbc.driver.OracleDriver</span><br><span class="line">    at java.net.URLClassLoader.findClass(URLClassLoader.java:<span class="number">381</span>)</span><br><span class="line">    at java.lang.ClassLoader.loadClass(ClassLoader.java:<span class="number">424</span>)</span><br><span class="line">    at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:<span class="number">331</span>)</span><br><span class="line">    at java.lang.ClassLoader.loadClass(ClassLoader.java:<span class="number">357</span>)</span><br><span class="line">    at java.lang.Class.forName0(Native Method)</span><br><span class="line">    at java.lang.Class.forName(Class.java:<span class="number">264</span>)</span><br><span class="line">    at MainClass.main(MainClass.java:<span class="number">7</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、NoClassDefFoundError"><a href="#2、NoClassDefFoundError" class="headerlink" title="2、NoClassDefFoundError"></a>2、NoClassDefFoundError</h2><p><strong>NoClassDefFoundError</strong> 异常，看命名后缀是一个 <strong>Error</strong> 。从类继承层次上看，<strong>NoClassDefFoundError</strong> 是从 <strong>Error</strong> 继承的。和 <strong>ClassNotFoundException</strong> 相比，明显的一个区别是，<strong>NoClassDefFoundError</strong> 并不需要应用程序去关心捕获的问题。</p>
+<p>当JVM在加载一个类的时候，如果这个类在编译时是可用的，但是在运行时找不到这个类的定义的时候，JVM就会抛出一个 <strong>NoClassDefFoundError</strong> 错误。比如当我们在 <strong>new</strong> 一个类的实例的时候，如果在运行是类找不到，则会抛出一个 <strong>NoClassDefFoundError</strong> 的错误。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class TempClass &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class MainClass &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        TempClass t = new TempClass();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ java MainClass</span><br><span class="line">Exception in thread &quot;main&quot; java.lang.NoClassDefFoundError: TempClass</span><br><span class="line">    at MainClass.main(MainClass.java:6)</span><br><span class="line">Caused by: java.lang.ClassNotFoundException: TempClass</span><br><span class="line">    at java.net.URLClassLoader.findClass(URLClassLoader.java:381)</span><br><span class="line">    at java.lang.ClassLoader.loadClass(ClassLoader.java:424)</span><br><span class="line">    at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331)</span><br><span class="line">    at java.lang.ClassLoader.loadClass(ClassLoader.java:357)</span><br><span class="line">    ... 1 more</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、总结"><a href="#3、总结" class="headerlink" title="3、总结"></a>3、总结</h2><table>
+<thead>
+<tr>
+<th align="left">ClassNotFoundException</th>
+<th align="left">NoClassDefFoundError</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">从java.lang.Exception继承，是Exception类型</td>
+<td align="left">从java.lang.Error继承，是Error类型</td>
+</tr>
+<tr>
+<td align="left">当动态加载Class的时候找不到类会抛出ClassNotFoundException异常</td>
+<td align="left">当编译成功以后执行过程中Class找不到导致抛出NoClassDefFoundError错误</td>
+</tr>
+<tr>
+<td align="left">一般在执行Class.forName()、ClassLoader.loadClass()或ClassLoader.findSystemClass()的时候抛出</td>
+<td align="left">由JVM的运行时抛出</td>
+</tr>
+</tbody></table>
+<p>转载：<a target="_blank" rel="noopener" href="https://tech101.cn/2018/06/23/ClassNotFoundException_vs_NoClassDefFoundError">https://tech101.cn/2018/06/23/ClassNotFoundException_vs_NoClassDefFoundError</a></p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/java%E5%9F%BA%E7%A1%80/">java基础</a><a class="post-meta__tags" href="/tags/java%E5%BC%82%E5%B8%B8/">java异常</a><a class="post-meta__tags" href="/tags/ClassNotFoundException/">ClassNotFoundException</a><a class="post-meta__tags" href="/tags/NoClassDefFoundError/">NoClassDefFoundError</a></div><div class="post-share"><div class="social-share" data-image="https://tva1.sinaimg.cn/large/008i3skNly1gyk26mvgc1j31hz0u0n4z.jpg" data-sites="wechat"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/53751/" title="Exception和Error"><img class="cover" src="https://tva1.sinaimg.cn/large/008i3skNly1gy8iuroj06j31ek0u0djc.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Exception和Error</div></div><div class="info-2"><div class="info-item-1">1、比Exception和Error，另外，运行时异常与一般异常有什么区别？Exception和Error都是继承了Throwable类，在Java中只有Throwable类型的实例才可以被抛出（throw）或者捕获（catch），它是异常处理机制的基本组成类型。 Exception和Error体现了Java平台设计者对不同异常情况的分类。Exception是程序正常运行中，可以预料的意外情况，可能并且应该被捕获，进行相应处理。 Error是指在正常情况下，不大可能出现的情况，绝大部分的Error都会导致程序（比如JVM自身）处于非正常的、不可恢复状态。既然是非正常情况，所以不便于也不需要捕获，常见的比如OutOfMemoryError之类，都是Error的子类。 Exception又分为可检查（checked）异常和不检查（unchecked）异常，可检查异常在源代码里必须显式地进行捕获处理，这是编译期检查的一部分。前面我介绍的不可查的Error，是Throwable不是Exception。 不检查异常就是所谓的运行时异常，类似...</div></div></div></a><a class="pagination-related" href="/posts/43229/" title="常见设计模式(一)"><img class="cover" src="https://tva1.sinaimg.cn/large/008i3skNly1gyuds3y8fnj317o0u0te0.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">常见设计模式(一)</div></div><div class="info-2"><div class="info-item-1"> </div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/53751/" title="Exception和Error"><img class="cover" src="https://tva1.sinaimg.cn/large/008i3skNly1gy8iuroj06j31ek0u0djc.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2020-01-15</div><div class="info-item-2">Exception和Error</div></div><div class="info-2"><div class="info-item-1">1、比Exception和Error，另外，运行时异常与一般异常有什么区别？Exception和Error都是继承了Throwable类，在Java中只有Throwable类型的实例才可以被抛出（throw）或者捕获（catch），它是异常处理机制的基本组成类型。 Exception和Error体现了Java平台设计者对不同异常情况的分类。Exception是程序正常运行中，可以预料的意外情况，可能并且应该被捕获，进行相应处理。 Error是指在正常情况下，不大可能出现的情况，绝大部分的Error都会导致程序（比如JVM自身）处于非正常的、不可恢复状态。既然是非正常情况，所以不便于也不需要捕获，常见的比如OutOfMemoryError之类，都是Error的子类。 Exception又分为可检查（checked）异常和不检查（unchecked）异常，可检查异常在源代码里必须显式地进行捕获处理，这是编译期检查的一部分。前面我介绍的不可查的Error，是Throwable不是Exception。 不检查异常就是所谓的运行时异常，类似...</div></div></div></a><a class="pagination-related" href="/posts/6832/" title="Collection集合"><img class="cover" src="https://tva1.sinaimg.cn/large/008i3skNly1gxov4kyyjdj31cq0u0780.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-09-10</div><div class="info-item-2">Collection集合</div></div><div class="info-2"><div class="info-item-1">1、Java 为什么要有集合？首先，java 是一门面向对象语言，操作对象是我们的日常。既然操作就需要有东西把对象存储起来。于是容器就应运而生，初学者接触到的第一个容器就是数组，但这远远不够，根据不同的对象以及不同的业务，我们需要用到不同的容器。比如，不想要重复对象，我们就会想到用 set 容器，想要对象有序我们会用 List 。不管是 List、Set。他们都会有共性， 而 java 就根据这些共性，给我们提供了 Collection 集合。 2、Collection接口框架图 由上面的 Collection 接口框架图，我们可以知道 Collection 是 List、Set、Queue 的父接口，看到这里，你们可能会问，Map 哪去了？其实，Java 中的容器，包括 Collection 和 Map ，Map 是另外一个体系。 3、Collection的方法  Collection 接口定义了以上待实现的方法。比如：  size() 计算容器长度  isEmpty() 是否为空  contains() 是否包含某个对象  containsAll()...</div></div></div></a><a class="pagination-related" href="/posts/15913/" title="JAVA基础回顾"><img class="cover" src="https://tva1.sinaimg.cn/large/008i3skNly1gxorzlwn36j31xs0t0q5b.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2018-02-05</div><div class="info-item-2">JAVA基础回顾</div></div><div class="info-2"><div class="info-item-1">1. 8种基本数据类型 2. 面向对象的三大特性 封装 继承 多态  3. &#x3D;&#x3D;、hashCode()、 equals() &#x3D;&#x3D;  本质：是一个比较运算符 作用：比较俩个对象地址是否相等，基本数据类型比较的是值，引用数据类型比较的是内存地址   hashCode()   本质：返回一个int整数值(哈希码&#x2F;散列码) 作用：确定该对象在哈希表中的索引位置，也就是说hashCode()在散列表(Java集合中本质是散列表的类，如HashMap，Hashtable，HashSet。)中才有用，在其它情况下没用(例如，创建类的单个对象，或者创建类的对象数组等等)。 hashcode()定义在JDK的Object.java中，所以Java中的任何类都包含有该方法 使用：比较俩个引用类型对象是否相等时，需要重写该方法   equals()  作用：判断俩个引用类型对象的地址是否相等  使用：  1). 类没有重写equals()方法。调用equals()比较该类的俩个对象时，等价与’&#x3D;&#x3D;’，比较的是俩个对象的地址值。 ...</div></div></div></a><a class="pagination-related" href="/posts/33923/" title="Lambda表达式(一)"><img class="cover" src="https://tva1.sinaimg.cn/large/008i3skNly1gxnz1dd4baj31ib0u03zd.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-06-18</div><div class="info-item-2">Lambda表达式(一)</div></div><div class="info-2"><div class="info-item-1">1、什么是lambda表达式Java8 是我们使用最广泛的稳定 Java 版本，lambda 就是其中最引人瞩目的新特性。lambda 是一种闭包，它允许把函数当做参数来使用，是面向函数式编程的思想，可以使代码看起来更加简洁。是不是听得一脸懵逼？我举个栗子你就明白了。 烂掉牙的例子，在没有 lambda 时候，我们是这样写的： 123456789101112// 内部类写法public class InnerClassMain &#123;    public static void main(String[] args) &#123;        //匿名内部类写法        new Thread(new Runnable() &#123;            @Override            public void run() &#123;                System.out.println(&quot;内部类写法&quot;);            &#125;        &#125;).start();   ...</div></div></div></a><a class="pagination-related" href="/posts/54405/" title="Lambda表达式(三)"><img class="cover" src="https://tva1.sinaimg.cn/large/008i3skNly1gxnz1dd4baj31ib0u03zd.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-06-18</div><div class="info-item-2">Lambda表达式(三)</div></div><div class="info-2"><div class="info-item-1">1、如何使用 lambda表达式1.1  构造器引用12345678910111213141516public class ConstructMethodExample &#123;    public static void main(String [] args) &#123;        // 构造方法方法引用--无参数(可以使用方法引用)        Supplier&lt;Method&gt; supplier = Method::new;        System.out.println(supplier.get());        // 等价于        Supplier&lt;Method&gt; supplier2 = () -&gt; new Method();        System.out.println(supplier2.get());        // 构造方法方法引用--有参数        Function&lt;String, Method&gt; uf = name -&gt; new Method(name);     ...</div></div></div></a><a class="pagination-related" href="/posts/17447/" title="Lambda表达式(二)"><img class="cover" src="https://tva1.sinaimg.cn/large/008i3skNly1gxnz1dd4baj31ib0u03zd.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-06-18</div><div class="info-item-2">Lambda表达式(二)</div></div><div class="info-2"><div class="info-item-1">1、如何使用 lambda表达式1.1  lambda语法12// 格式遵循: (接口参数)-&gt;表达式(具体实现的方法)(paramters) -&gt; expression 或 (parameters) -&gt;&#123; expressions; &#125;   具体解释，如上图。此外，lambda 语法注意点：  可选类型声明：方法参数不需要声明参数类型，编译器可以统一识别参数值。 可选的参数圆括号：一个参数无需定义圆括号，但无参数或多个参数需要定义圆括号。 可选的大括号：如果具体实现方法只有一个语句，就不需要使用中括号{}。 可选的返回关键字：如果具体实现方法只有一个表达式，则编译器会自动返回值，如果有多个表达式则，中括号需要指定明表达式返回了一个数值。  具体使用示例: 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455public class Example &#123;    //...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">edwin</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">43</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">37</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/edwinvlog"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">1、前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81ClassNotFoundException"><span class="toc-number">2.</span> <span class="toc-text">2、ClassNotFoundException</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81NoClassDefFoundError"><span class="toc-number">3.</span> <span class="toc-text">2、NoClassDefFoundError</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">3、总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3153/" title="Redis集群——主从同步">Redis集群——主从同步</a><time datetime="2025-02-05T14:22:28.439Z" title="发表于 2025-02-05 22:22:28">2025-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/22330/" title="Mongo 创建索引语句"><img src="https://tva1.sinaimg.cn/large/008i3skNly1gxortiy2d2j318e0mudhg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Mongo 创建索引语句"/></a><div class="content"><a class="title" href="/posts/22330/" title="Mongo 创建索引语句">Mongo 创建索引语句</a><time datetime="2025-02-05T14:22:28.433Z" title="发表于 2025-02-05 22:22:28">2025-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/62837/" title="限流算法"><img src="https://tva1.sinaimg.cn/large/008i3skNly1gyk2fu4dbuj31hg0u0nhw.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="限流算法"/></a><div class="content"><a class="title" href="/posts/62837/" title="限流算法">限流算法</a><time datetime="2025-02-05T14:22:28.397Z" title="发表于 2025-02-05 22:22:28">2025-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/4726/" title="线程池使用问题"><img src="https://tva1.sinaimg.cn/large/008i3skNly1gyk2icqnr0j31cu0u0197.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="线程池使用问题"/></a><div class="content"><a class="title" href="/posts/4726/" title="线程池使用问题">线程池使用问题</a><time datetime="2025-02-05T14:22:28.391Z" title="发表于 2025-02-05 22:22:28">2025-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/23956/" title="开发军规"><img src="https://tva1.sinaimg.cn/large/008i3skNly1gyk2gu4rhxj31c70u0k2i.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="开发军规"/></a><div class="content"><a class="title" href="/posts/23956/" title="开发军规">开发军规</a><time datetime="2025-02-05T14:22:28.387Z" title="发表于 2025-02-05 22:22:28">2025-02-05</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By edwin</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getGiscusTheme = theme => theme === 'dark' ? 'dark' : 'light'
+
+  const createScriptElement = config => {
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => {
+      ele.setAttribute(key, value)
+    })
+    return ele
+  }
+
+  const loadGiscus = (el = document, key) => {
+    const mappingConfig = isShuoshuo
+      ? { 'data-mapping': 'specific', 'data-term': key }
+      : { 'data-mapping': (option && option['data-mapping']) || 'pathname' }
+
+    const giscusConfig = {
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'edwinvlog/ingblog',
+      'data-repo-id': 'R_kgDON1Uwdw',
+      'data-category-id': 'DIC_kwDON1Uwd84CmtqO',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      ...mappingConfig
+    }
+
+    const scriptElement = createScriptElement(giscusConfig)
+
+    el.querySelector('#giscus-wrap').appendChild(scriptElement)
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGiscus = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const changeGiscusTheme = theme => {
+    const iframe = document.querySelector('#giscus-wrap iframe')
+    if (iframe) {
+      const message = {
+        giscus: {
+          setConfig: {
+            theme: getGiscusTheme(theme)
+          }
+        }
+      }
+      iframe.contentWindow.postMessage(message, 'https://giscus.app')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if (isShuoshuo) {
+    'Giscus' === 'Giscus'
+      ? window.shuoshuoComment = { loadComment: loadGiscus }
+      : window.loadOtherComment = loadGiscus
+    return
+  }
+
+  if ('Giscus' === 'Giscus' || !false) {
+    if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment = loadGiscus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
